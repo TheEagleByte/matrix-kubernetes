@@ -1,0 +1,24 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ ingressName }}
+  namespace: {{ adminNamespace }}
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`www.{{ adminDomain }}`)
+      kind: Rule
+      services:
+        - name: synapse-admin-service
+          port: 80
+    - match: Host(`{{ adminDomain }}`)
+      kind: Rule
+      services:
+        - name: synapse-admin-service
+          port: 80
+  tls:
+    secretName: {{ domainTlsSecret }}

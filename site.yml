@@ -1,0 +1,39 @@
+- hosts: k8s
+  tags: base
+  roles:
+    - base
+
+- hosts: k8s
+  tags: postgres
+  roles:
+    - postgres
+
+- hosts: k8s
+  tags: synapse
+  roles:
+    - synapse
+
+- hosts: k8s
+  tags: sydent
+  roles:
+    - sydent
+
+- hosts: k8s
+  tags: element
+  roles:
+    - element
+
+- hosts: k8s
+  tags: admin
+  roles:
+    - admin
+
+- hosts: k8s
+  tags: everything
+  roles:
+    - base
+    - synapse
+    - sydent
+    - element
+    - admin
+    - postgres

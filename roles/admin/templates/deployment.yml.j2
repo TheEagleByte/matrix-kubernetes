@@ -1,0 +1,23 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-ui-deployment
+  namespace: {{ adminNamespace }}
+spec:
+  selector:
+    matchLabels:
+      app: admin-ui
+  replicas: 1
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 2
+  template:
+    metadata:
+      labels:
+        app: admin-ui
+    spec:
+      containers:
+      - name: admin-ui
+        image: awesometechnologies/synapse-admin:latest
+        ports: 
+        - containerPort: 80

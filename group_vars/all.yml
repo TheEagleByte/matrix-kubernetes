@@ -1,0 +1,17 @@
+kubectl_kubeconfig: "~/.kube/default"
+verify_ssl: no
+
+synapseNamespace: synapse
+adminNamespace: synapse-admin
+elementNamespace: element
+sydentNamespace: sydent
+
+domainTlsSecret: mydomain-dev-tls
+
+domains:
+  - mydomain.dev
+
+adminDomain: synapse-admin.mydomain.dev
+synapseDomain: matrix-test-0.mydomain.dev
+elementDomain: element-app.mydomain.dev
+sydentDomain: sydent-identity.mydomain.dev

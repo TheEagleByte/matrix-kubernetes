@@ -1,0 +1,5 @@
+- name: ensure admin ingress route is up to date
+  k8s:
+    state: present
+    definition:  "{{ lookup('template', 'ingressroute.yml.j2') }}"
+    
