@@ -1,0 +1,38 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: federation-workers
+  namespace: synapse
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: (Host(`www.greyman.services`) || Host(`greyman.services`)) && (
+        PathPrefix(`/_matrix/federation/v1/event`) || 
+        PathPrefix(`/_matrix/federation/v1/state`) || 
+        PathPrefix(`/_matrix/federation/v1/state_ids`) || 
+        PathPrefix(`/_matrix/federation/v1/backfill`) || 
+        PathPrefix(`/_matrix/federation/v1/get_missing_events`) || 
+        PathPrefix(`/_matrix/federation/v1/publicRooms`) || 
+        PathPrefix(`/_matrix/federation/v1/query`) || 
+        PathPrefix(`/_matrix/federation/v1/make_join`) || 
+        PathPrefix(`/_matrix/federation/v1/make_leave`) || 
+        PathPrefix(`/_matrix/federation/{(v1|v2)}/send_join`) || 
+        PathPrefix(`/_matrix/federation/{(v1|v2)}/send_leave`) || 
+        PathPrefix(`/_matrix/federation/{(v1|v2)}/invite`) || 
+        PathPrefix(`/_matrix/federation/v1/event_auth`) || 
+        PathPrefix(`/_matrix/federation/v1/exchange_third_party_invite`) || 
+        PathPrefix(`/_matrix/federation/v1/user/devices`) || 
+        PathPrefix(`/_matrix/key/v2/query`) || 
+        PathPrefix(`/_matrix/federation/v1/hierarchy`) || 
+        PathPrefix(`/_matrix/federation/v1/send`))
+      kind: Rule
+      priority: 10
+      services:
+        - name: federation-workers
+          port: 8083
+  tls:
+    secretName: greyman-services-tls

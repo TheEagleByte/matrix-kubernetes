@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synapse-client-wellknown
+  namespace: greyman
+  labels:
+    app: synapse-client-wellknown
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: synapse-client-wellknown
+  template:
+    metadata:
+      labels:
+        app: synapse-client-wellknown
+    spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: synapse-client-wellknown
+      containers:
+      - name: nginx
+        image: nginx:1.21-alpine
+        ports:
+        - name: http
+          containerPort: 80
+        volumeMounts:
+          - name: config-volume
+            mountPath: /etc/nginx/conf.d/default.conf
+            subPath: default.conf

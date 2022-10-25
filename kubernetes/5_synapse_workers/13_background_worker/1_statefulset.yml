@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: background-workers
+  namespace: synapse
+  labels:
+    app: background-workers
+spec:
+  serviceName: background-workers
+  replicas: 1
+  selector:
+    matchLabels:
+      app: background-workers
+  template:
+    metadata:
+      labels:
+        app: background-workers
+    spec:
+      volumes:
+        - name: worker-config-volume
+          configMap:
+            name: background-worker-config
+        - name: synapse-config-volume
+          configMap:
+            name: synapse-config
+        - name: media-volume
+          persistentVolumeClaim:
+            claimName: synapse-media
+      containers:
+      - name: synapse
+        image: matrixdotorg/synapse:v1.69.0
+        args: ["run", "--config-path=/data/homeserver.yaml", "--config-path=/data/worker.yaml"]
+        env:
+        - name: PGHOST
+          valueFrom: { secretKeyRef: { name: synapse-db-secret, key: host } }
+        - name: PGPORT
+          valueFrom: { secretKeyRef: { name: synapse-db-secret, key: port } }
+        - name: PGDATABASE
+          valueFrom: { secretKeyRef: { name: synapse-db-secret, key: database} }
+        - name: PGUSER 
+          valueFrom: { secretKeyRef: { name: synapse-db-secret, key: user } }
+        - name: PGPASSWORD
+          valueFrom: { secretKeyRef: { name: synapse-db-secret, key: password } }
+        - name: SYNAPSE_WORKER
+          value: synapse.app.generic_worker
+        ports:
+        - name: metrics
+          containerPort: 9090
+        volumeMounts:
+          - name: synapse-config-volume
+            mountPath: /data/homeserver.yaml
+            subPath: homeserver.yaml
+          - name: synapse-config-volume
+            mountPath: /data/log.config
+            subPath: log.config
+          - name: synapse-config-volume
+            mountPath: /data/signing.key
+            subPath: signing.key
+          - name: worker-config-volume
+            mountPath: /data/worker.yaml
+            subPath: worker.yaml
+          - name: worker-config-volume
+            mountPath: /data/worker
+          - name: media-volume
+            mountPath: /data/media_store

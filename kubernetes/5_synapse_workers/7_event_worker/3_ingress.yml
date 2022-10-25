@@ -1,0 +1,26 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: event-workers
+  namespace: synapse
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: (Host(`www.greyman.services`) || Host(`greyman.services`)) && (
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3|unstable)}/rooms/{(.*)}/redact`) || 
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3|unstable)}/rooms/{(.*)}/send`) || 
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3|unstable)}/rooms/{(.*)}/state`) || 
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3|unstable)}/rooms/{(.*)}/{(join|invite|leave|ban|unban|kick)}`) || 
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3|unstable)}/join`) || 
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3|unstable)}/profile`))
+      kind: Rule
+      priority: 10
+      services:
+        - name: event-workers
+          port: 8083
+  tls:
+    secretName: greyman-services-tls

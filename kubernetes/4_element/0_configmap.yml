@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: element-config
+  namespace: element
+data:
+  config.json: |
+    {
+        "branding": {
+            "auth_footer_links": [
+                {
+                    "text": "Code of Conduct",
+                    "url": "https://greyman.network/code-of-conduct/"
+                },
+                {
+                    "text": "Contact",
+                    "url": "https://greyman.network/contact/"
+                },
+                {
+                    "text": "Terms of Service",
+                    "url": "https://greyman.network/tos/"
+                },
+                {
+                    "text": "Privacy Policy",
+                    "url": "https://greyman.network/privacy"
+                }
+            ]
+        },
+        "default_server_config": {
+            "m.homeserver": {
+                "base_url": "https://greyman.services",
+                "server_name": "greyman.network"
+            },
+            "m.identity_server": {
+                "base_url": "https://identity.greyman.network"
+            }
+        },
+        "disable_custom_urls": false,
+        "disable_guests": true,
+        "disable_login_language_selector": false,
+        "disable_3pid_login": false,
+        "brand": "Greyman Network",
+        "integrations_ui_url": "https://scalar.vector.im/",
+        "integrations_rest_url": "https://scalar.vector.im/api",
+        "integrations_widgets_urls": [
+            "https://scalar.vector.im/_matrix/integrations/v1",
+            "https://scalar.vector.im/api",
+            "https://scalar-staging.vector.im/_matrix/integrations/v1",
+            "https://scalar-staging.vector.im/api",
+            "https://scalar-staging.riot.im/scalar/api"
+        ],
+        "bug_report_endpoint_url": "https://element.io/bugreports/submit",
+        "uisi_autorageshake_app": "element-auto-uisi",
+        "default_country_code": "US",
+        "show_labs_settings": true,
+        "features": {
+            "feature_report_to_moderators": true,
+            "feature_pinning": true,
+            "feature_breadcrumbs_v2": true,
+            "feature_spotlight": true,
+            "feature_thread": true,
+            "feature_video_rooms": true,
+            "feature_exploring_public_spaces": true
+        },
+        "default_federate": false,
+        "default_theme": "dark",
+        "room_directory": {
+            "servers": [
+                "greyman.network"
+            ]
+        },
+        "report_event": {
+            "admin_message_md": "Please be sure to review our [code of conduct](https://greyman.network/code-of-conduct/) before reporting a message."
+        },
+        "piwik": {
+            "url": "https://piwik.riot.im/",
+            "whitelisted_hs_urls": ["https://matrix.org"],
+            "whitelisted_is_urls": ["https://vector.im", "https://matrix.org"],
+            "siteId": 1
+        },
+        "terms_and_conditions_links": [
+            { "text": "Code of Conduct", "url": "https://greyman.network/code-of-conduct/" }
+        ],
+        "enable_presence_by_hs_url": {
+            "https://greyman.services": true
+        },
+        "setting_defaults": {
+            "breadcrumbs": true
+        },
+        "jitsi": {
+            "preferred_domain": "meet.element.io"
+        },
+        "map_style_url": "https://api.maptiler.com/maps/streets/style.json?key=fU3vlMsMn4Jb6dnEIFsx"
+    }

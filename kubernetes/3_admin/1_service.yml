@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: synapse-admin
+  namespace: synapse-admin
+spec:
+  selector:
+    app: synapse-admin
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80

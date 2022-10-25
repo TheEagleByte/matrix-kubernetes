@@ -1,0 +1,24 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: synapse-admin
+  namespace: synapse-admin
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`www.synapse-admin.parrhesia.dev`)
+      kind: Rule
+      services:
+        - name: synapse-admin
+          port: 80
+    - match: Host(`synapse-admin.parrhesia.dev`)
+      kind: Rule
+      services:
+        - name: synapse-admin
+          port: 80
+  tls:
+    secretName: parrhesia-dev-tls

@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: synapse-config
+  namespace: synapse
+data:
+  homeserver.yaml: |-
+    server_name: "matrix.parrhesia.dev"
+    pid_file: /data/homeserver.pid
+    web_client_location: https://app.parrhesia.dev
+    serve_server_wellknown: true
+    listeners:
+      - port: 8008
+        tls: false
+        type: http
+        x_forwarded: true
+        resources:
+          - names: [client]
+            compress: false
+    delete_stale_devices_after: 1y
+    admin_contact: 'mailto:admin@greyman.network'
+    mau_stats_only: true
+    database:
+      name: psycopg2
+      args:
+        cp_min: 5
+        cp_max: 10
+    log_config: "/data/log.config"
+    media_store_path: /data/media_store
+    max_upload_size: 50M
+    media_retention:
+      local_media_lifetime: 1y
+      remote_media_lifetime: 21d
+    url_preview_enabled: true
+    url_preview_ip_range_blacklist:
+      - '127.0.0.0/8'
+      - '10.0.0.0/8'
+      - '172.16.0.0/12'
+      - '192.168.0.0/16'
+      - '100.64.0.0/10'
+      - '192.0.0.0/24'
+      - '169.254.0.0/16'
+      - '192.88.99.0/24'
+      - '198.18.0.0/15'
+      - '192.0.2.0/24'
+      - '198.51.100.0/24'
+      - '203.0.113.0/24'
+      - '224.0.0.0/4'
+      - '::1/128'
+      - 'fe80::/10'
+      - 'fc00::/7'
+      - '2001:db8::/32'
+      - 'ff00::/8'
+      - 'fec0::/10'
+    enable_registration: true
+    enable_registration_captcha: true
+    recaptcha_public_key: 6LcNE1EiAAAAABLdosztplPtRCkJGRgKHU_btXqy
+    recaptcha_private_key: 6LcNE1EiAAAAABVJ1ufCmEF13_Jrz7iMbPO85q7e
+    registration_shared_secret: "=Enhj&T:7MYAe4QvU:ogtBfIroQKmL6e_mPGk5eJ,l8Jy&1GW1"
+    default_identity_server: https://identity.parrhesia.dev
+    enable_metrics: true
+    report_stats: false
+    macaroon_secret_key: "9@Kbji6r@NXk7sMBfVDHe:kZL;e,j9ulKqBwmZ1kyf+DcQd6P_"
+    form_secret: "vEP*P3L^xCbNJat2KeVvPbtSa4;8hJ2Z3D,rECqiJHG-NE~_Zp"
+    signing_key_path: "/data/signing.key"
+    trusted_key_servers:
+      - server_name: "matrix.org"
+    suppress_key_server_warning: true
+    federation_domain_whitelist:
+      - matrix.parrhesia.dev
+    send_federation: false
+    email:
+      smtp_host: smtp.gmail.com
+      smtp_port: 587
+      smtp_user: admin@greyman.network
+      smtp_pass: zVKz2l^FN8IOOua1E1xlzREvvm6X6w
+      enable_tls: true
+      app_name: Parrhesia
+      notif_from: system@greyman.network
+      client_base_url: https://app.parrhesia.dev
+  signing.key: |-
+    ed25519 a_pDAO pT4pJVDj3wQWJGZjdWpDlpDNOujCSmnm6Lrr5yLOFr4
+  log.config: |-
+    version: 1
+    formatters:
+      precise:
+        format: '%(asctime)s - %(name)s - %(lineno)d - %(levelname)s - %(request)s - %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: precise
+    loggers:
+      synapse.storage.SQL:
+        level: INFO
+    root:
+      level: INFO
+      handlers: [console]
+    disable_existing_loggers: false

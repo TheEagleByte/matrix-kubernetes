@@ -1,0 +1,52 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: synapse-db-repo1
+  namespace: synapse
+spec:
+  storageClassName: longhorn
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 75Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: synapse-db-00-cvg2-pgdata
+  namespace: synapse
+spec:
+  storageClassName: longhorn
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 75Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: synapse-db-00-vgck-pgdata
+  namespace: synapse
+spec:
+  storageClassName: longhorn
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 75Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: synapse-db-00-wrwz-pgdata
+  namespace: synapse
+spec:
+  storageClassName: longhorn
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 75Gi

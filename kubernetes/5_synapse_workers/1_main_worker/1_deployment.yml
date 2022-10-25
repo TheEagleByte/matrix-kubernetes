@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synapse-replication
+  namespace: synapse
+  labels:
+    app: synapse-replication
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: synapse-replication
+  template:
+    metadata:
+      labels:
+        app: synapse-replication
+    spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: synapse-config
+        - name: media-volume
+          persistentVolumeClaim:
+            claimName: synapse-media
+      containers:
+      - name: synapse-replication
+        image: matrixdotorg/synapse:v1.69.0
+        env:
+        - name: PGHOST
+          valueFrom: { secretKeyRef: { name: synapse-db-secret, key: host } }
+        - name: PGPORT
+          valueFrom: { secretKeyRef: { name: synapse-db-secret, key: port } }
+        - name: PGDATABASE
+          valueFrom: { secretKeyRef: { name: synapse-db-secret, key: database} }
+        - name: PGUSER 
+          valueFrom: { secretKeyRef: { name: synapse-db-secret, key: user } }
+        - name: PGPASSWORD
+          valueFrom: { secretKeyRef: { name: synapse-db-secret, key: password } }
+        - name: SYNAPSE_WORKER
+          value: synapse.app.homeserver
+        ports:
+        - name: http
+          containerPort: 8008
+        - name: replication
+          containerPort: 9093
+        - name: metrics
+          containerPort: 9090
+        volumeMounts:
+          - name: config-volume
+            mountPath: /data/homeserver.yaml
+            subPath: homeserver.yaml
+          - name: config-volume
+            mountPath: /data/log.config
+            subPath: log.config
+          - name: config-volume
+            mountPath: /data/signing.key
+            subPath: signing.key
+          - name: media-volume
+            mountPath: /data/media_store
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 9093

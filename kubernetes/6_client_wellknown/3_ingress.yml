@@ -1,0 +1,22 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: synapse-client-wellknown
+  namespace: greyman
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: (Host(`www.greyman.services`) || Host(`greyman.services`)) && PathPrefix(`/.well-known/matrix/client`)
+      kind: Rule
+      priority: 10
+      services:
+        - name: synapse-client-wellknown
+          port: 80
+      middlewares:
+        - name: default-headers
+  tls:
+    secretName: greyman-services-tls

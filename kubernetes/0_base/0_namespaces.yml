@@ -1,0 +1,23 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: synapse-admin
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: element
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: synapse
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sydent

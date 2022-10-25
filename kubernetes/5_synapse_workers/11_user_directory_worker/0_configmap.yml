@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-directory-worker-config
+  namespace: synapse
+data:
+  run.sh: |
+    #!/bin/sh
+    SET_INDEX=${HOSTNAME##*-}
+    echo "Starting initializing for pod $SET_INDEX"
+    cp /mnt/scripts/worker.yaml /mnt/configs/worker.yaml
+    sed -i "s/{SET_INDEX}/$SET_INDEX/g" /mnt/configs/worker.yaml
+  worker.yaml: |
+    worker_app: synapse.app.generic_worker
+    worker_name: user-directory-worker-{SET_INDEX}
+    worker_replication_host: synapse-replication.synapse.svc
+    worker_replication_http_port: 9093
+    worker_listeners:
+      - type: http
+        port: 8083
+        tls: false
+        x_forwarded: true
+        resources:
+          - names: [client]
+            compress: false
+      - type: metrics
+        port: 9090

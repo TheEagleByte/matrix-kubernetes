@@ -1,0 +1,24 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: synapse
+  namespace: synapse
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`www.matrix.parrhesia.dev`) && (PathPrefix(`/_matrix`) || PathPrefix(`/_synapse`) || PathPrefix(`/.well-known/matrix`))
+      kind: Rule
+      services:
+        - name: synapse
+          port: 8008
+    - match: Host(`matrix.parrhesia.dev`) && (PathPrefix(`/_matrix`) || PathPrefix(`/_synapse`) || PathPrefix(`/.well-known/matrix`))
+      kind: Rule
+      services:
+        - name: synapse
+          port: 8008
+  tls:
+    secretName: parrhesia-dev-tls

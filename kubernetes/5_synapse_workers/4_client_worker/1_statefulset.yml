@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: client-workers
+  namespace: synapse
+  labels:
+    app: client-workers
+spec:
+  serviceName: client-workers
+  replicas: 3
+  selector:
+    matchLabels:
+      app: client-workers
+  template:
+    metadata:
+      labels:
+        app: client-workers
+    spec:
+      volumes:
+        - name: scripts-volume
+          configMap:
+            name: client-worker-config
+            defaultMode: 0555
+        - name: worker-config-volume
+          emptyDir: {}
+        - name: synapse-config-volume
+          configMap:
+            name: synapse-config
+        - name: media-volume
+          persistentVolumeClaim:
+            claimName: synapse-media
+      initContainers:
+        - name: init-config
+          image: alpine:latest
+          command:
+            - /mnt/scripts/run.sh
+          volumeMounts:
+            - name: scripts-volume
+              mountPath: /mnt/scripts
+            - name: worker-config-volume
+              mountPath: /mnt/configs
+      containers:
+      - name: synapse
+        image: matrixdotorg/synapse:v1.69.0
+        args: ["run", "--config-path=/data/homeserver.yaml", "--config-path=/data/worker/worker.yaml"]
+        env:
+        - name: PGHOST
+          valueFrom: { secretKeyRef: { name: synapse-db-secret, key: host } }
+        - name: PGPORT
+          valueFrom: { secretKeyRef: { name: synapse-db-secret, key: port } }
+        - name: PGDATABASE
+          valueFrom: { secretKeyRef: { name: synapse-db-secret, key: database} }
+        - name: PGUSER 
+          valueFrom: { secretKeyRef: { name: synapse-db-secret, key: user } }
+        - name: PGPASSWORD
+          valueFrom: { secretKeyRef: { name: synapse-db-secret, key: password } }
+        - name: SYNAPSE_WORKER
+          value: synapse.app.generic_worker
+        ports:
+        - name: http
+          containerPort: 8083
+        - name: metrics
+          containerPort: 9090
+        volumeMounts:
+          - name: synapse-config-volume
+            mountPath: /data/homeserver.yaml
+            subPath: homeserver.yaml
+          - name: synapse-config-volume
+            mountPath: /data/log.config
+            subPath: log.config
+          - name: synapse-config-volume
+            mountPath: /data/signing.key
+            subPath: signing.key
+          - name: worker-config-volume
+            mountPath: /data/worker
+          - name: media-volume
+            mountPath: /data/media_store
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8083

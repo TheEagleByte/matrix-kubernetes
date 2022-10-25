@@ -1,0 +1,23 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: login-workers
+  namespace: synapse
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: (Host(`www.greyman.services`) || Host(`greyman.services`)) && (
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3|unstable)}/login`) || 
+        PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/register`) || 
+        PathPrefix(`/_matrix/client/v1/register/m.login.registration_token/validity`))
+      kind: Rule
+      priority: 10
+      services:
+        - name: login-workers
+          port: 8083
+  tls:
+    secretName: greyman-services-tls

@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: synapse-replication
+  namespace: synapse
+spec:
+  selector:
+    app: synapse-replication
+  ports:
+    - name: http
+      port: 8008
+      targetPort: 8008
+    - name: replication
+      port: 9093
+      targetPort: 9093
+    - name: metrics
+      port: 9090
+      targetPort: 9090

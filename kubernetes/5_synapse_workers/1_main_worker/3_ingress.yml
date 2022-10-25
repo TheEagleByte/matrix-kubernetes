@@ -1,0 +1,54 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: synapse-main
+  namespace: synapse
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: (Host(`www.greyman.services`) || Host(`greyman.services`)) && (
+        PathPrefix(`/.well-known/matrix/server`) ||
+        PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/user/{(.*)}/filter`) ||
+        PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/thirdparty/protocols`) ||
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3|unstable)}/pushrules`) ||
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3|unstable)}/rooms/{(.*)}/typing`) ||
+        PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/sendToDevice`) ||
+        PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/rooms/{(.*)}/receipt`) ||
+        PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/rooms/{(.*)}/read_markers`) ||
+        PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/register/available`) ||
+        PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/directory/room`))
+      kind: Rule
+      priority: 12
+      services:
+        - name: synapse-replication
+          port: 8008
+    - match: (Host(`www.greyman.services`) || Host(`greyman.services`))
+      kind: Rule
+      priority: 5
+      services:
+        - name: synapse-replication
+          port: 8008
+  tls:
+    secretName: greyman-services-tls
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: default-headers
+  namespace: synapse
+spec:
+  headers:
+    browserXssFilter: true
+    contentTypeNosniff: true
+    forceSTSHeader: true
+    stsIncludeSubdomains: true
+    stsPreload: true
+    stsSeconds: 15552000
+    customFrameOptionsValue: SAMEORIGIN
+    customRequestHeaders:
+      X-Forwarded-Proto: https

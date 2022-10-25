@@ -1,0 +1,63 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: parrhesia-dev-cert
+  namespace: synapse-admin
+spec:
+  secretName: parrhesia-dev-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "*.parrhesia.dev"
+  dnsNames:
+  - "parrhesia.dev"
+  - "*.parrhesia.dev"
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: parrhesia-dev-cert
+  namespace: element
+spec:
+  secretName: parrhesia-dev-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "*.parrhesia.dev"
+  dnsNames:
+  - "parrhesia.dev"
+  - "*.parrhesia.dev"
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: parrhesia-dev-cert
+  namespace: synapse
+spec:
+  secretName: parrhesia-dev-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "*.parrhesia.dev"
+  dnsNames:
+  - "parrhesia.dev"
+  - "*.parrhesia.dev"
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: parrhesia-dev-cert
+  namespace: sydent
+spec:
+  secretName: parrhesia-dev-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "*.parrhesia.dev"
+  dnsNames:
+  - "parrhesia.dev"
+  - "*.parrhesia.dev"

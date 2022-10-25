@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: synapse-client-wellknown
+  namespace: greyman
+spec:
+  selector:
+    app: synapse-client-wellknown
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80

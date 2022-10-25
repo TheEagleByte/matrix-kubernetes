@@ -1,0 +1,21 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: pagination-workers
+  namespace: synapse
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: (Host(`www.greyman.services`) || Host(`greyman.services`)) && 
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3|unstable)}/rooms/{(.*)}/messages`)
+      kind: Rule
+      priority: 10
+      services:
+        - name: pagination-workers
+          port: 8083
+  tls:
+    secretName: greyman-services-tls

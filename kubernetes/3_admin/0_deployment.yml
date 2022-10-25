@@ -1,0 +1,23 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synapse-admin
+  namespace: synapse-admin
+spec:
+  selector:
+    matchLabels:
+      app: synapse-admin
+  replicas: 1
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 2
+  template:
+    metadata:
+      labels:
+        app: synapse-admin
+    spec:
+      containers:
+      - name: synapse-admin
+        image: awesometechnologies/synapse-admin:latest
+        ports: 
+        - containerPort: 80

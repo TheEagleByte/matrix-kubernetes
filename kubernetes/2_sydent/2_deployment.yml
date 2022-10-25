@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sydent
+  namespace: sydent
+spec:
+  selector:
+    matchLabels:
+      app: sydent
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: sydent
+    spec:
+      securityContext:
+        fsGroup: 1001
+      volumes:
+        - name: config-volume
+          configMap:
+            name: sydent-config
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: sydent
+      containers:
+        - name: sydent
+          image: matrixdotorg/sydent:v2.5.2
+          env:
+            - name: SYDENT_SERVER_NAME
+              value: identity.parrhesia.dev
+            - name: SYDENT_CONF
+              value: /data/sydent.conf
+            - name: SYDENT_PID_FILE
+              value: /data/sydent.pid
+            - name: SYDENT_DB_PATH
+              value: /data/sydent.db
+          ports: 
+            - containerPort: 8090
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data
+            - name: config-volume
+              mountPath: /data/sydent.conf
+              subPath: sydent.conf
+          readinessProbe:
+            failureThreshold: 3
+            successThreshold: 1
+            initialDelaySeconds: 0
+            timeoutSeconds: 1
+            periodSeconds: 10
+            httpGet:
+              scheme: HTTP
+              port: 8090
+              path: /_matrix/identity/v2/terms

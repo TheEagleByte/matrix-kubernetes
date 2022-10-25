@@ -1,0 +1,35 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sync-workers
+  namespace: synapse
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: (Host(`www.greyman.services`) || Host(`greyman.services`)) && (
+        PathPrefix(`/_matrix/client/{(r0|v3)}/sync`) || 
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3)}/events`) || 
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3)}/initialSync`) || 
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3)}/rooms/{([^/]+)}/initialSync`)) && 
+        Query(`since={(.*)}`)
+      kind: Rule
+      priority: 10
+      services:
+        - name: sync-workers
+          port: 8083
+    - match: (Host(`www.greyman.services`) || Host(`greyman.services`)) && (
+        PathPrefix(`/_matrix/client/{(r0|v3)}/sync`) || 
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3)}/events`) || 
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3)}/initialSync`) || 
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3)}/rooms/{([^/]+)}/initialSync`)) && !Query(`since={(.*)}`)
+      kind: Rule
+      priority: 10
+      services:
+        - name: sync-worker-nosince
+          port: 8083
+  tls:
+    secretName: greyman-services-tls

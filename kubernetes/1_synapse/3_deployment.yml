@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synapse
+  namespace: synapse
+  labels:
+    app: synapse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: synapse
+  template:
+    metadata:
+      labels:
+        app: synapse
+    spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: synapse-config
+        - name: media-volume
+          persistentVolumeClaim:
+            claimName: synapse-media
+      containers:
+      - name: synapse
+        image: matrixdotorg/synapse:v1.69.0
+        env:
+        - name: PGHOST
+          valueFrom: { secretKeyRef: { name: synapse-db-pguser-synapse-db, key: host } }
+        - name: PGPORT
+          valueFrom: { secretKeyRef: { name: synapse-db-pguser-synapse-db, key: port } }
+        - name: PGDATABASE
+          valueFrom: { secretKeyRef: { name: synapse-db-pguser-synapse-db, key: dbname } }
+        - name: PGUSER 
+          valueFrom: { secretKeyRef: { name: synapse-db-pguser-synapse-db, key: user } }
+        - name: PGPASSWORD
+          valueFrom: { secretKeyRef: { name: synapse-db-pguser-synapse-db, key: password } }
+        ports:
+        - name: http
+          containerPort: 8080
+        volumeMounts:
+          - name: config-volume
+            mountPath: /data/homeserver.yaml
+            subPath: homeserver.yaml
+          - name: config-volume
+            mountPath: /data/log.config
+            subPath: log.config
+          - name: config-volume
+            mountPath: /data/signing.key
+            subPath: signing.key
+          - name: media-volume
+            mountPath: /data/media_store
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8008

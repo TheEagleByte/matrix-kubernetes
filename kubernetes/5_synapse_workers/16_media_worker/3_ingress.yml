@@ -1,0 +1,27 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: media-workers
+  namespace: synapse
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: (Host(`www.greyman.services`) || Host(`greyman.services`)) && (
+        PathPrefix(`/_matrix/media`) || PathPrefix(`//_matrix/media`) || 
+        PathPrefix(`/_synapse/admin/v1/purge_media_cache`) || 
+        PathPrefix(`/_synapse/admin/v1/room/{(.*)}/media{(.*)}`) || 
+        PathPrefix(`/_synapse/admin/v1/user/{(.*)}/media{(.*)}`) || 
+        PathPrefix(`/_synapse/admin/v1/media/{(.*)}`) || 
+        PathPrefix(`/_synapse/admin/v1/quarantine_media/{(.*)}`) || 
+        PathPrefix(`/_synapse/admin/v1/users/{(.*)}/media`))
+      kind: Rule
+      priority: 10
+      services:
+        - name: media-workers
+          port: 8085
+  tls:
+    secretName: greyman-services-tls
