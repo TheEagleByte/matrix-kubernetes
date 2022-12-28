@@ -16,11 +16,38 @@ spec:
         PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/thirdparty/protocols`) ||
         PathPrefix(`/_matrix/client/{(api/v1|r0|v3|unstable)}/pushrules`) ||
         PathPrefix(`/_matrix/client/{(api/v1|r0|v3|unstable)}/rooms/{(.*)}/typing`) ||
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3|unstable)}/rooms/{(.*)}/forget`) ||
+        PathPrefix(`/_matrix/client/{(api/v1|r0|v3|unstable)}/rooms/{(.*)}/report`) ||
         PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/sendToDevice`) ||
         PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/rooms/{(.*)}/receipt`) ||
+        PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/rooms/{(.*)}/relations`) ||
         PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/rooms/{(.*)}/read_markers`) ||
         PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/register/available`) ||
-        PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/directory/room`))
+        PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/register/email`) ||
+        PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/directory/room`) ||
+        PathPrefix(`/_synapse/admin/v1/account_validity/validity`) ||
+        PathPrefix(`/_synapse/admin/v1/background_updates/status`) ||
+        PathPrefix(`/_synapse/admin/v1/background_updates/status`) ||
+        PathPrefix(`/_synapse/admin/v1/background_updates/start_job`) ||
+        PathPrefix(`/_synapse/admin/v1/event_reports`) ||
+        PathPrefix(`/_synapse/admin/v1/purge_history`) ||
+        PathPrefix(`/_synapse/admin/v1/purge_history_status`) ||
+        PathPrefix(`/_synapse/admin/v1/register`) ||
+        PathPrefix(`/_synapse/admin/v1/registration_tokens`) ||
+        PathPrefix(`/_synapse/admin/v1/join`) ||
+        PathPrefix(`/_synapse/admin/v1/rooms`) ||
+        PathPrefix(`/_synapse/admin/v2/rooms`) ||
+        PathPrefix(`/_synapse/admin/v1/send_server_notice`) ||
+        PathPrefix(`/_synapse/admin/v1/statistics/users/media`) ||
+        PathPrefix(`/_synapse/admin/v2/users`) ||
+        PathPrefix(`/_synapse/admin/v1/whois`) ||
+        PathPrefix(`/_synapse/admin/v1/deactivate`) ||
+        PathPrefix(`/_synapse/admin/v1/reset_password`) ||
+        PathPrefix(`/_synapse/admin/v1/users`) ||
+        PathPrefix(`/_synapse/admin/v1/username_available`) ||
+        PathPrefix(`/_synapse/admin/v1/auth_providers`) ||
+        PathPrefix(`/_synapse/admin/v1/server_version`) ||
+        PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/account/3pid`))
       kind: Rule
       priority: 12
       services:

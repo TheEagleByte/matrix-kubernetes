@@ -24,7 +24,7 @@ spec:
             claimName: synapse-media
       containers:
       - name: synapse-replication
-        image: matrixdotorg/synapse:v1.69.0
+        image: matrixdotorg/synapse:v1.71.0
         env:
         - name: PGHOST
           valueFrom: { secretKeyRef: { name: synapse-db-secret, key: host } }

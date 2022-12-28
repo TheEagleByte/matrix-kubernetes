@@ -20,7 +20,6 @@ spec:
         PathPrefix(`/_matrix/client/v1/rooms/{(.*)}/hierarchy`) || 
         PathPrefix(`/_matrix/client/unstable/org.matrix.msc2716/rooms/{(.*)}/batch_send`) || 
         PathPrefix(`/_matrix/client/unstable/im.nheko.summary/rooms/{(.*)}/summary`) || 
-        PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/account/3pid`) || 
         PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/account/whoami`) || 
         PathPrefix(`/_matrix/client/{(r0|v3|unstable)}/devices`) || 
         PathPrefix(`/_matrix/client/versions`) || 

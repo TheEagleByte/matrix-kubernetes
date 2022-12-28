@@ -45,7 +45,7 @@ spec:
               mountPath: /mnt/configs
       containers:
       - name: synapse
-        image: matrixdotorg/synapse:v1.69.0
+        image: matrixdotorg/synapse:v1.71.0
         args: ["run", "--config-path=/data/homeserver.yaml", "--config-path=/data/worker/worker.yaml"]
         env:
         - name: PGHOST
