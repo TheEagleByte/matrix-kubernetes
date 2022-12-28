@@ -28,7 +28,7 @@ spec:
             claimName: synapse-media
       containers:
       - name: synapse
-        image: matrixdotorg/synapse:v1.71.0
+        image: matrixdotorg/synapse:v1.74.0
         args: ["run", "--config-path=/data/homeserver.yaml", "--config-path=/data/worker.yaml"]
         env:
         - name: PGHOST
